@@ -1,0 +1,231 @@
+import React, { useState } from "react";
+import "./Calendar.css";
+
+interface PendingAlerts {
+  [key: number]: number;
+}
+
+const Calendar: React.FC = () => {
+  const [date, setDate] = useState(new Date());
+  const [pendingAlerts, setPendingAlerts] = useState<PendingAlerts>({});
+
+  const getDaysInMonth = (month: number, year: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getStartOfMonth = (month: number, year: number) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const generateCalendar = (month: number, year: number) => {
+    let daysInMonth = getDaysInMonth(month, year);
+    let startOfMonth = getStartOfMonth(month, year);
+
+    let calendar: number[][] = [];
+    let calendarRow: number[] = [];
+    for (let i = 0; i < startOfMonth; i++) {
+      calendarRow.push("");
+    }
+    for (let i = 1; i <= daysInMonth; i++) {
+      calendarRow.push(i);
+      if (calendarRow.length === 7) {
+        calendar.push(calendarRow);
+        calendarRow = [];
+      }
+    }
+    while (calendarRow.length !== 0) {
+      calendarRow.push("");
+      if (calendarRow.length === 7) {
+        calendar.push(calendarRow);
+        calendarRow = [];
+      }
+    }
+
+    return calendar;
+  };
+
+  const handlePreviousMonth = () => {
+    let newDate = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+    setDate(newDate);
+  };
+
+  const handleNextMonth = () => {
+    let newDate = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+    setDate(newDate);
+  };
+
+  return (
+    <div className="calendar">
+      <div className="header">
+        <button onClick={handlePreviousMonth}>{"<"}</button>
+        <div>
+          {date.toLocaleString("default", { month: "long" })}{" "}
+          {date.getFullYear()}
+        </div>
+        <button onClick={handleNextMonth}>{">"}</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+          </tr>
+        </thead>
+        <tbody>
+          {generateCalendar(date.getMonth(), date.getFullYear()).map(
+            (row, index) => (
+              <tr key={index}>
+                {row.map((day, index) => (
+                  <td key import React, { useState } from "react";
+import "./Calendar.css";
+
+interface PendingAlerts {
+  [key: number]: number;
+}
+
+const Calendar: React.FC = () => {
+  const [date, setDate] = useState(new Date());
+  const [pendingAlerts, setPendingAlerts] = useState<PendingAlerts>({});
+
+  const getDaysInMonth = (month: number, year: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getStartOfMonth = (month: number, year: number) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const generateCalendar = (month: number, year: number) => {
+    let daysInMonth = getDaysInMonth(month, year);
+    let startOfMonth = getStartOfMonth(month, year);
+
+    let calendar: number[][] = [];
+    let calendarRow: number[] = [];
+    for (let i = 0; i < startOfMonth; i++) {
+      calendarRow.push("");
+    }
+    for (let i = 1; i <= daysInMonth; i++) {
+      calendarRow.push(i);
+      if (calendarRow.length === 7) {
+        calendar.push(calendarRow);
+        calendarRow = [];
+      }
+    }
+    while (calendarRow.length !== 0) {
+      calendarRow.push("");
+      if (calendarRow.length === 7) {
+        calendar.push(calendarRow);
+        calendarRow = [];
+      }
+    }
+
+    return calendar;
+  };
+
+  const handlePreviousMonth = () => {
+    let newDate = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+    setDate(newDate);
+  };
+
+  const handleNextMonth = () => {
+    let newDate = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+    setDate(newDate);
+  };
+
+  return (
+    <div className="calendar">
+      <div className="header">
+        <button onClick={handlePreviousMonth}>{"<"}</button>
+        <div>
+          {date.toLocaleString("default", { month: "long" })}{" "}
+          {date.getFullYear()}
+        </div>
+        <button onClick={handleNextMonth}>{">"}</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+          </tr>
+        </thead>
+        <tbody>
+          {generateCalendar(date.getMonth(), date.getFullYear()).map(
+            (row, index) => (
+              <tr key={index}>
+                {row.map((day, index) => (
+                  <td key ={index} className={day !== "" ? "day" : ""}>
+{day !== "" ? day : ""}
+{day !== "" && pendingAlerts[day] ? (
+<div>
+<span className="label">
+{pendingAlerts[day] ? pendingAlerts[day] : 0} Pending
+Alerts
+</span>
+</div>
+) : (
+""
+)}
+</td>
+))}
+</tr>
+)
+)}
+</tbody>
+</table>
+</div>
+);
+};
+
+export default Calendar;
+
+
+
+.calendar {
+  width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #ddd;
+}
+
+th,
+td {
+  border: 1px solid #333;
+  padding: 10px;
+}
+
+.day {
+  background-color: #eee;
+}
+
+.label {
+  font-size: 12px;
+  color: #666;
+}
+
+
