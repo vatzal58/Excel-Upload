@@ -1,0 +1,141 @@
+import React, { useState } from "react";
+import "./TabPanel.css";
+
+interface Tab {
+  id: string;
+  title: string;
+  content: React.ReactNode;
+}
+
+interface TabProps extends Tab {
+  activeTab: string;
+  onTabClick: (id: string) => void;
+  onCloseClick?: (id: string) => void;
+}
+
+function Tab({ id, title, content, activeTab, onTabClick, onCloseClick }: TabProps) {
+  const isActive = activeTab === id;
+
+  function handleTabClick() {
+    onTabClick(id);
+  }
+
+  function handleCloseClick(event: React.MouseEvent<HTMLDivElement>) {
+    event.stopPropagation();
+    if (onCloseClick) {
+      onCloseClick(id);
+    }
+  }
+
+  return (
+    <div className={`tab ${isActive ? "active" : ""}`} onClick={handleTabClick}>
+      <div className="tab-title">{title}</div>
+      {onCloseClick && (
+        <div className="tab-close" onClick={handleCloseClick}>
+          x
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface TabContentProps extends Tab {
+  activeTab: string;
+}
+
+function TabContent({ id, content, activeTab }: TabContentProps) {
+  const isActive = activeTab === id;
+
+  return (
+    <div className={`tab-content ${isActive ? "active" : ""}`}>{content}</div>
+  );
+}
+
+interface TabPanelProps {
+  tabs: Tab[];
+}
+
+function TabPanel({ tabs }: TabPanelProps) {
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
+
+  function handleTabClick(tabId: string) {
+    setActiveTab(tabId);
+  }
+
+  function handleCloseClick(tabId: string) {
+    const newTabs = tabs.filter((tab) => tab.id !== tabId);
+    setActiveTab(newTabs[0].id);
+  }
+
+  return (
+    <div className="tab-panel">
+      <div className="tab-list">
+        {tabs.map((tab) => (
+          <Tab
+            key={tab.id}
+            id={tab.id}
+            title={tab.title}
+            content={tab.content}
+            activeTab={activeTab}
+            onTabClick={handleTabClick}
+            onCloseClick={handleCloseClick}
+          />
+        ))}
+      </div>
+      <div className="tab-contents">
+        {tabs.map((tab) => (
+          <TabContent
+            key={tab.id}
+            id={tab.id}
+            content={tab.content}
+            activeTab={activeTab}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default TabPanel;
+
+
+.tab-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.tab-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1em;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 0.5em 1em;
+  margin-right: 0.5em;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tab.active {
+  background-color: #fff;
+  border-bottom-color: #fff;
+}
+
+.tab-title {
+  font-weight: bold;
+}
+
+.tab-close {
+  margin-left: 0.5em;
+  font-weight: bold
+
+
