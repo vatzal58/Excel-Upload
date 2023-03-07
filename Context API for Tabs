@@ -1,0 +1,98 @@
+import React, { createContext, useState } from "react";
+
+type TabContextType = {
+  activeTab: string;
+  handleTabClick: (id: string) => void;
+};
+
+export const TabContext = createContext<TabContextType>({
+  activeTab: "",
+  handleTabClick: () => {},
+});
+
+type TabContextProviderProps = {
+  children: React.ReactNode;
+};
+
+export function TabContextProvider({ children }: TabContextProviderProps) {
+  const [activeTab, setActiveTab] = useState("tab1");
+
+  function handleTabClick(id: string) {
+    setActiveTab(id);
+  }
+
+  const contextValue = {
+    activeTab,
+    handleTabClick,
+  };
+
+  return <TabContext.Provider value={contextValue}>{children}</TabContext.Provider>;
+}
+
+----------------------------------------------------------------------------------------------------
+
+
+import React, { useContext } from "react";
+import { TabContext } from "./TabContext";
+
+function TabContent({ id, content }: TabContentProps) {
+  const { activeTab, handleTabClick } = useContext(TabContext);
+
+  function handleClick() {
+    handleTabClick(id);
+  }
+
+  const isActive = activeTab === id;
+
+  return (
+    <div className={`tab-content ${isActive ? "active" : ""}`}>
+      {isActive && (
+        <div>
+          {content}
+          <button onClick={handleClick}>Activate Tab 1</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+-------------------------------------------------------------------------------------------------------
+
+import React from "react";
+import TabPanel, { Tab } from "./TabPanel";
+import { TabContextProvider } from "./TabContext";
+
+function App() {
+  const tabs: Tab[] = [
+    {
+      id: "tab1",
+      title: "Tab 1",
+      content: <div>This is tab 1 content</div>,
+    },
+    {
+      id: "tab2",
+      title: "Tab 2",
+      content: <div>This is tab 2 content</div>,
+    },
+    {
+      id: "tab3",
+      title: "Tab 3",
+      content: (
+        <div>
+          This is tab 3 content.
+          <TabContent id="tab1" content="Tab 1 content" />
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className="App">
+      <TabContextProvider>
+        <TabPanel tabs={tabs} />
+      </TabContextProvider>
+    </div>
+  );
+}
+
+export default App;
