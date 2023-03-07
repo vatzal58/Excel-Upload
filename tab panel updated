@@ -1,0 +1,81 @@
+import React, { useState } from "react";
+import TabPanel, { Tab } from "./TabPanel";
+
+function App() {
+  const [activeTab, setActiveTab] = useState("tab1");
+
+  function handleTabClick(id: string) {
+    setActiveTab(id);
+  }
+
+  const tabs: Tab[] = [
+    {
+      id: "tab1",
+      title: "Tab 1",
+      content: <div>This is tab 1 content</div>,
+    },
+    {
+      id: "tab2",
+      title: "Tab 2",
+      content: <div>This is tab 2 content</div>,
+    },
+    {
+      id: "tab3",
+      title: "Tab 3",
+      content: (
+        <div>
+          This is tab 3 content. <button onClick={() => handleTabClick("tab1")}>Activate Tab 1</button>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className="App">
+      <TabPanel activeTab={activeTab} tabs={tabs} onTabClick={handleTabClick} />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+
+function TabPanel({ tabs, activeTab, onTabClick }: TabPanelProps) {
+  function handleTabClick(id: string) {
+    onTabClick(id);
+  }
+
+  // rest of component
+}
+
+
+
+
+
+
+
+
+
+function TabContent({ id, content, activeTab, onTabClick }: TabContentProps) {
+  function handleTabClick() {
+    onTabClick(id);
+  }
+
+  const isActive = activeTab === id;
+
+  return (
+    <div className={`tab-content ${isActive ? "active" : ""}`}>
+      {isActive && (
+        <div>
+          {content}
+          <button onClick={handleTabClick}>Activate Tab 1</button>
+        </div>
+      )}
+    </div>
+  );
+}
