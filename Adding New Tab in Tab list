@@ -1,0 +1,137 @@
+import React, { useContext, useState } from "react";
+
+interface Tab {
+  id: string;
+  title: string;
+  content: React.ReactNode | Promise<React.ReactNode>;
+  closable?: boolean;
+}
+
+interface TabContextType {
+  activeTab: string;
+  tabs: Tab[];
+  setActiveTab: (id: string) => void;
+  addTab: (tab: Tab) => void;
+  removeTab: (id: string) => void;
+}
+
+const TabContext = React.createContext<TabContextType>({
+  activeTab: "",
+  tabs: [],
+  setActiveTab: () => {},
+  addTab: () => {},
+  removeTab: () => {},
+});
+
+function TabProvider(props: { children: React.ReactNode }) {
+  const [activeTab, setActiveTab] = useState<string>("");
+  const [tabs, setTabs] = useState<Tab[]>([]);
+
+  function addTab(tab: Tab) {
+    const newId = (tabs.length + 1).toString();
+    const newTab = {
+      ...tab,
+      id: newId,
+    };
+    setTabs([...tabs, newTab]);
+  }
+
+  function removeTab(id: string) {
+    const index = tabs.findIndex((tab) => tab.id === id);
+
+    if (index !== -1 && tabs[index].closable) {
+      const newTabs = [...tabs];
+      newTabs.splice(index, 1);
+      setTabs(newTabs);
+
+      // If the closed tab was the active tab, activate the first tab
+      if (activeTab === id && newTabs.length > 0) {
+        setActiveTab(newTabs[0].id);
+      }
+    }
+  }
+
+  const contextValue = {
+    activeTab,
+    tabs,
+    setActiveTab,
+    addTab,
+    removeTab,
+  };
+
+  return (
+    <TabContext.Provider value={contextValue}>
+      {props.children}
+    </TabContext.Provider>
+  );
+}
+
+function TabPanel() {
+  const { activeTab, tabs, setActiveTab, removeTab } =
+    useContext(TabContext);
+
+  function handleTabClick(id: string) {
+    setActiveTab(id);
+  }
+
+  function handleCloseTab(id: string) {
+    removeTab(id);
+  }
+
+  return (
+    <div>
+      <ul>
+        {tabs.map((tab) => (
+          <li
+            key={tab.id}
+            onClick={() => handleTabClick(tab.id)}
+            className={tab.id === activeTab ? "active" : ""}
+          >
+            {tab.title}
+            {tab.closable && (
+              <button onClick={(e) => {
+                e.stopPropagation();
+                handleCloseTab(tab.id);
+              }}>x</button>
+            )}
+          </li>
+        ))}
+      </ul>
+      {tabs.map(
+        (tab) =>
+          tab.id === activeTab && (
+            <div key={tab.id}>{tab.content}</div>
+          )
+      )}
+    </div>
+  );
+}
+
+function App() {
+  const { addTab } = useContext(TabContext);
+
+  function handleNewTab() {
+    const newTab: Tab = {
+      id: "",
+      title: "New Tab",
+      content: <div>This is new tab content</div>,
+      closable: true, // This tab can be closed
+    };
+
+    addTab(newTab);
+  }
+
+  return (
+    <div>
+      <button onClick={handleNewTab}>New Tab</button>
+      <TabPanel />
+    </div>
+  );
+}
+
+function Main() {
+  return (
+    <TabProvider>
+      <App />
+    </TabProvider>
+ 
