@@ -1,0 +1,61 @@
+type Tab = {
+
+  id: number;
+
+  title: string;
+
+  content: () => Promise<React.ReactNode>;
+
+  closable: boolean;
+
+  data: any; // <-- add data property
+
+};
+
+
+const [tabs, setTabs] = useState<Tab[]>([
+
+  { id: 1, title: "Tab 1", content: getContent(1), closable: false, data: { counter: 0 } },
+
+  { id: 2, title: "Tab 2", content: getContent(2), closable: true, data: { counter: 0 } },
+
+  { id: 3, title: "Tab 3", content: getContent(3), closable: true, data: { counter: 0 } },
+
+]);
+
+
+function updateTabData(tabId: number, newData: any) {
+
+  setTabs((prevTabs) =>
+
+    prevTabs.map((tab) =>
+
+      tab.id === tabId ? { ...tab, data: { ...tab.data, ...newData } } : tab
+
+    )
+
+  );
+
+}
+
+function getTabData(tabId: number) {
+  const tab = tabs.find((tab) => tab.id === tabId);
+  return tab ? tab.data : null;
+}
+
+
+const value = {
+
+  activeTab,
+
+  setActiveTab,
+
+  tabs,
+
+  setTabs,
+
+  updateTabData,
+
+  getTabData,
+
+};
