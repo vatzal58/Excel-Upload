@@ -1,0 +1,44 @@
+interface Column {
+  Id: string;
+  Count: boolean;
+  Mandatory: boolean;
+  Name: string;
+  Tooltip: string;
+  Type: string;
+}
+
+interface Filter {
+  Id: string | Column;
+  Count: boolean;
+  Name: string;
+  Mandatory: boolean;
+  Tooltip: string;
+  Type: string;
+}
+
+interface Query {
+  [index: number]: [Column | Filter, string, string[]][];
+}
+
+function getSearchValues(query: Query): string[] {
+  const searchValues: string[] = [];
+
+  query.forEach((filters: [Column | Filter, string, string[]][]) => {
+    filters.forEach((filter: [Column | Filter, string, string[]]) => {
+      const [column, operator, values] = filter;
+
+      if (column && column.Id === "Search") {
+        searchValues.push(...values);
+      }
+    });
+  });
+
+  return searchValues;
+}
+
+// Usage example:
+const query = /* the given array */;
+
+const searchValues = getSearchValues(query);
+console.log(searchValues); // ["FA No", "Security No", "Age"]
+
