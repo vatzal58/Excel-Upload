@@ -1,0 +1,12 @@
+function getNumberOfDays(dateString: string): number {
+  const [month, day, year] = dateString.split('/');
+  const date = new Date(parseInt(year), parseInt(month) - 1, 1);
+  date.setMonth(date.getMonth() + 1);
+  date.setDate(date.getDate() - 1);
+  return date.getDate();
+}
+
+const dateString = '05/19/2023';
+const numberOfDays = getNumberOfDays(dateString);
+
+console.log(numberOfDays); // Output: 31
