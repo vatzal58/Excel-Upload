@@ -1,0 +1,34 @@
+function is3DArrayEmpty(arr: any[][][]): boolean {
+
+  if (arr.length === 0) {
+
+    return true;
+
+  }
+
+  for (let i = 0; i < arr.length; i++) {
+
+    const innerArr = arr[i];
+
+    for (let j = 0; j < innerArr.length; j++) {
+
+      const subArr = innerArr[j];
+
+      for (let k = 0; k < subArr.length; k++) {
+
+        if (subArr[k] !== null) {
+
+          return false;
+
+        }
+
+      }
+
+    }
+
+  }
+
+  return true;
+
+}
+
