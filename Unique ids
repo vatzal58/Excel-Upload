@@ -1,0 +1,28 @@
+const array = [
+
+  { personNo: 1, name: "John" },
+
+  { personNo: 2, name: "Jane" },
+
+  { personNo: 1, name: "David" },
+
+  { personNo: 3, name: "Sarah" },
+
+  { personNo: 2, name: "Michael" }
+
+];
+
+const uniqueObjects = Object.values(
+
+  array.reduce((acc, obj) => {
+
+    acc[obj.personNo] = obj;
+
+    return acc;
+
+  }, {})
+
+);
+
+console.log(uniqueObjects);
+
