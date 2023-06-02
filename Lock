@@ -1,0 +1,68 @@
+import { useState, useEffect } from 'react';
+
+const activeInstances = [];
+
+const useTradeLock = (initialAlertKey) => {
+
+  const [isLocked, setIsLocked] = useState(false);
+
+  const [timeoutId, setTimeoutId] = useState(null);
+
+  const acquireLock = (newAlertKey) => {
+
+    setIsLocked(true);
+
+    clearTimeout(timeoutId); // Clear any existing timeouts
+
+    const newTimeoutId = setTimeout(() => {
+
+      releaseLock();
+
+    }, 20 * 60 * 1000); // 20 minutes in milliseconds
+
+    setTimeoutId(newTimeoutId);
+
+  };
+
+  const releaseLock = () => {
+
+    setIsLocked(false);
+
+    clearTimeout(timeoutId); // Clear the timeout when releasing the lock
+
+    setTimeoutId(null);
+
+  };
+
+  useEffect(() => {
+
+    activeInstances.push({ acquireLock, releaseLock });
+
+    return () => {
+
+      const index = activeInstances.findIndex((instance) => instance.acquireLock === acquireLock);
+
+      if (index !== -1) {
+
+        activeInstances.splice(index, 1);
+
+      }
+
+      clearTimeout(timeoutId); // Clear the timeout when the component using the hook unmounts
+
+    };
+
+  }, []);
+
+  useEffect(() => {
+
+    console.log('Active Instances:', activeInstances);
+
+  }, [isLocked]);
+
+  return { isLocked, acquireLock, releaseLock };
+
+};
+
+export default useTradeLock;
+
