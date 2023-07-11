@@ -1,0 +1,39 @@
+import React, { ChangeEvent, useState } from 'react';
+
+const MyComponent: React.FC = () => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    // Remove any characters that are not numbers or alphabets
+    const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
+
+    setInputValue(sanitizedValue);
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const keyCode = event.keyCode || event.which;
+    const keyValue = String.fromCharCode(keyCode);
+
+    // Allow only numbers and alphabets
+    const allowedRegex = /^[a-zA-Z0-9]+$/;
+
+    if (!allowedRegex.test(keyValue)) {
+      event.preventDefault();
+    }
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={inputValue}
+        onChange={handleInputChange}
+        onKeyPress={handleKeyPress}
+      />
+    </div>
+  );
+};
+
+export default MyComponent;
