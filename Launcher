@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cookie Check and URL Redirection</title>
+</head>
+<body>
+<script>
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  function redirectToUrl(url) {
+    window.open(url, '_blank');
+  }
+
+  function getEnvironment() {
+    const domain = location.href.split('/')[2]; // Get the domain from location.href
+    if (domain === "dev.example.com") return "Dev";
+    else if (domain === "pl1.example.com") return "pl1";
+    else if (domain === "pl2.example.com") return "pl2";
+    else if (domain === "qa.example.com") return "QA";
+    else if (domain === "prod.example.com") return "Prod";
+    else return "Unknown"; // Update this accordingly
+  }
+
+  const env = getEnvironment();
+
+  const smSessionCookie = getCookie("SMSESSION");
+  const bearCookie = getCookie("Bear");
+
+  let secondCookieName;
+  if (env === "Dev") secondCookieName = "BearDIF";
+  else if (env === "pl1") secondCookieName = "BearPL1";
+  else if (env === "pl2") secondCookieName = "BearPL2";
+  else if (env === "QA") secondCookieName = "BearQA";
+  else if (env === "Prod") secondCookieName = "Bear";
+
+  const secondCookie = getCookie(secondCookieName);
+
+  if (!smSessionCookie || !secondCookie) {
+    const baseUrl = `https://${env.toLowerCase()}.example.com`; // Construct the base URL based on the environment
+
+    const redirectUrl = `${baseUrl}/ADNETAPPS/MLGiving4/ADLogon.aspx`;
+    redirectToUrl(redirectUrl);
+  } else {
+    const finalUrl = `https://${env.toLowerCase()}.example.com/final-page`; // Construct the final URL based on the environment
+
+    redirectToUrl(finalUrl);
+  }
+</script>
+</body>
+</html>
