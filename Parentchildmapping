@@ -1,0 +1,29 @@
+const entries = [
+  {
+    href: '...',
+    parentlabel: 'parent1',
+    label: '...',
+  },
+  {
+    href: '...',
+    parentlabel: 'parent2',
+    label: '...',
+  },
+  {
+    href: '...',
+    parentlabel: 'parent1',
+    label: '...',
+  },
+  // ...
+];
+
+const mappedEntries = entries.reduce((acc, entry) => {
+  const { parentlabel, ...rest } = entry;
+  if (!acc[parentlabel]) {
+    acc[parentlabel] = [];
+  }
+  acc[parentlabel].push(rest);
+  return acc;
+}, {});
+
+console.log(mappedEntries);
