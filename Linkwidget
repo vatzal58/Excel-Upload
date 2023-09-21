@@ -1,0 +1,57 @@
+import React from 'react';
+
+interface Link {
+  href: string;
+  label: string;
+  // Add other properties as needed
+}
+
+interface Props {
+  data: Record<string, Link[]>;
+}
+
+const MAX_HEIGHT = 100; // Maximum height for each column
+const LABEL_HEIGHT = 19.5; // Height of parent label
+const LINK_HEIGHT = 19.5; // Height of individual link
+
+const ColumnLayout: React.FC<Props> = ({ data }) => {
+  const columns: JSX.Element[][] = [[]];
+  let currentColumn = 0;
+
+  Object.entries(data).forEach(([parentLabel, links]) => {
+    const column = columns[currentColumn];
+    const columnHeight =
+      column.reduce((acc, link) => acc + link.length, 0) * LINK_HEIGHT +
+      LABEL_HEIGHT;
+
+    if (columnHeight + links.length * LINK_HEIGHT > MAX_HEIGHT) {
+      currentColumn++;
+      columns[currentColumn] = [];
+    }
+
+    column.push(
+      <div key={parentLabel}>
+        <h2>{parentLabel}</h2>
+        <ul>
+          {links.map((link) => (
+            <li key={link.href}>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  });
+
+  return (
+    <div style={{ display: 'flex' }}>
+      {columns.map((column, index) => (
+        <div key={index} style={{ flex: 1 }}>
+          {column}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default ColumnLayout;
