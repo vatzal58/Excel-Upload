@@ -1,0 +1,12 @@
+const RenderCustomizedLegend = ({ payload }) => {
+  return (
+    <ul>
+      {payload.map((entry, index) => (
+        <li key={`item-${index}`} style={{ color: entry.color }}>
+          {entry.value}
+          {/* Add your tooltip logic here */}
+        </li>
+      ))}
+    </ul>
+  );
+}
