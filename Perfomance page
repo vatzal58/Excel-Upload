@@ -1,0 +1,97 @@
+// PerformanceTest.tsx
+import React, { useState } from "react";
+import { Button, TextField, Box, Typography } from "@mui/material";
+
+// Define the endpoints to test
+const endpoints = [
+  { url: "https://example.com/api/endpoint1", method: "GET" },
+  {
+    url: "https://example.com/api/endpoint2",
+    method: "POST",
+    // Add a payload for the post request
+    payload: { name: "John", age: 25 },
+  },
+  { url: "https://example.com/api/endpoint3", method: "GET" },
+];
+
+// Define a function to make a fetch request to an endpoint
+const fetchEndpoint = async (endpoint: {
+  url: string;
+  method: string;
+  payload?: any;
+}) => {
+  try {
+    const response = await fetch(endpoint.url, {
+      method: endpoint.method,
+      // Add the payload to the request body if it exists
+      body: endpoint.payload ? JSON.stringify(endpoint.payload) : undefined,
+    });
+    // Return true if the status code is 200, false otherwise
+    return response.status === 200;
+  } catch (error) {
+    console.error(error);
+    // Return false if there is an error
+    return false;
+  }
+};
+
+// Define the PerformanceTest component
+const PerformanceTest = () => {
+  // Define the state for the number of users
+  const [users, setUsers] = useState(0);
+  // Define the state for the count of successful API calls
+  const [count, setCount] = useState(0);
+
+  // Define a function to handle the change of the text field
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Parse the input value as a number
+    const value = parseInt(event.target.value, 10);
+    // Set the users state to the value or 0 if it is not a valid number
+    setUsers(isNaN(value) ? 0 : value);
+  };
+
+  // Define a function to handle the click of a button
+  const handleClick = async (endpoint: {
+    url: string;
+    method: string;
+    payload?: any;
+  }) => {
+    // Reset the count state to 0
+    setCount(0);
+    // Loop through the number of users
+    for (let i = 0; i < users; i++) {
+      // Call the fetchEndpoint function with the endpoint and await the result
+      const result = await fetchEndpoint(endpoint);
+      // If the result is true, increment the count state by 1
+      if (result) {
+        setCount((prevCount) => prevCount + 1);
+      }
+    }
+  };
+
+  // Return the JSX element for the component
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <TextField
+        label="Number of users"
+        type="number"
+        value={users}
+        onChange={handleChange}
+      />
+      {endpoints.map((endpoint) => (
+        <Button
+          key={endpoint.url}
+          onClick={() => handleClick(endpoint)}
+          variant="contained"
+        >
+          Test {endpoint.method} {endpoint.url}
+        </Button>
+      ))}
+      <Typography variant="h6">
+        Count of API calls with status code 200: {count}
+      </Typography>
+    </Box>
+  );
+};
+
+export default PerformanceTest;
