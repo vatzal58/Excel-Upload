@@ -58,15 +58,21 @@ const PerformanceTest = () => {
   }) => {
     // Reset the count state to 0
     setCount(0);
+    // Create an array to store the promises of the fetchEndpoint function
+    const promises: Promise<boolean>[] = [];
     // Loop through the number of users
     for (let i = 0; i < users; i++) {
-      // Call the fetchEndpoint function with the endpoint and await the result
-      const result = await fetchEndpoint(endpoint);
-      // If the result is true, increment the count state by 1
+      // Call the fetchEndpoint function with the endpoint and push the promise to the array
+      promises.push(fetchEndpoint(endpoint));
+    }
+    // Wait for all the promises to resolve
+    const results = await Promise.all(promises);
+    // Loop through the results and increment the count state for each true value
+    results.forEach((result) => {
       if (result) {
         setCount((prevCount) => prevCount + 1);
       }
-    }
+    });
   };
 
   // Return the JSX element for the component
