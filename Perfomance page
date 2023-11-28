@@ -1,6 +1,6 @@
 // PerformanceTest.tsx
 import React, { useState } from "react";
-import { Button, TextField, Box, Typography } from "@mui/material";
+import { Button, TextField, Box, Typography, Grid } from "@mui/material";
 
 // Define the endpoints to test
 const endpoints = [
@@ -77,22 +77,36 @@ const PerformanceTest = () => {
 
   // Return the JSX element for the component
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        alignItems: "center",
+      }}
+    >
+      <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+        Performance Testing
+      </Typography>
       <TextField
         label="Number of users"
         type="number"
         value={users}
         onChange={handleChange}
       />
-      {endpoints.map((endpoint) => (
-        <Button
-          key={endpoint.url}
-          onClick={() => handleClick(endpoint)}
-          variant="contained"
-        >
-          Test {endpoint.method} {endpoint.url}
-        </Button>
-      ))}
+      <Grid container spacing={2} justifyContent="center">
+        {endpoints.map((endpoint) => (
+          <Grid item key={endpoint.url}>
+            <Button
+              onClick={() => handleClick(endpoint)}
+              variant="contained"
+              sx={{ width: 300 }}
+            >
+              Test {endpoint.method} {endpoint.url}
+            </Button>
+          </Grid>
+        ))}
+      </Grid>
       <Typography variant="h6">
         Count of API calls with status code 200: {count}
       </Typography>
