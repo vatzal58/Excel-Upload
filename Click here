@@ -1,0 +1,33 @@
+import React from 'react';
+
+const YourComponent = ({ message }) => {
+  const keyword = 'yourKeyword';
+
+  // Replace the keyword with a placeholder
+  const modifiedMessage = message.replace(
+    new RegExp(keyword, 'g'),
+    '__REACT_LINK_PLACEHOLDER__'
+  );
+
+  // Split the modified message into parts
+  const parts = modifiedMessage.split('__REACT_LINK_PLACEHOLDER__');
+
+  // Create an array to hold the final JSX elements
+  const jsxElements = [];
+
+  // Loop through parts and insert either string or the custom link component
+  parts.forEach((part, index) => {
+    jsxElements.push(<span key={index}>{part}</span>);
+    if (index < parts.length - 1) {
+      jsxElements.push(<YourCustomLinkComponent key={`link-${index}`} />);
+    }
+  });
+
+  return <div>{jsxElements}</div>;
+};
+
+const YourCustomLinkComponent = () => {
+  return <a href="#">Click here</a>;
+};
+
+export default YourComponent;
