@@ -1,6 +1,3 @@
 const str = "apple,orange ,banana ,grape";
-const arr = str.split(/,(?!\s)|(?<!\s),/);
+const arr = str.split(/,\s(?=\w)/);
 console.log(arr);
-
-const output = input.split (/,(?!(?:\\bNo Name\\b|\\bDiscretionary\\b|\\bHold All Mail\\b))/i)
-const output = input.split (/,(?!(?:No Name|Discretionary|Hold All Mail))/); //
