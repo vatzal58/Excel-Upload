@@ -1,0 +1,7 @@
+const openOutlookEmail = (recipients: string[], subject: string, body: string) => {
+  const mailto: string = \`mailto:\${recipients.join(',')}?subject=\${encodeURIComponent(subject)}&body=\${encodeURIComponent(body)}\`;
+  window.location.href = mailto;
+};
+
+// Usage example:
+openOutlookEmail(['example@outlook.com'], 'Your Subject Here', 'Your email body content here.');
