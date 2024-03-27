@@ -1,0 +1,48 @@
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
+
+// Directory path where the Outlook emails are stored as .msg files
+string emailDirectory = @"C:\Path\To\Your\Emails";
+
+// Loop through each .msg file in the directory
+foreach (string file in Directory.GetFiles(emailDirectory, "*.msg"))
+{
+    // Read the content of the file
+    string emailContent = File.ReadAllText(file);
+
+    string emailContent = File.ReadAllText(file);
+
+    // Use regex to extract the topic name, topic category, and topic video ID
+    // The following regex pattern matches anything between quotation marks following "topic:" or "Topic:"
+    string topicNamePattern = @"topic: ""(.*?)""|Topic: ""(.*?)""";
+
+    // Adjust the regex patterns for topic category and topic video ID as needed
+    // ...
+
+    Match topicNameMatch = Regex.Match(emailContent, topicNamePattern, RegexOptions.IgnoreCase);
+    // Use regex to extract the topic category from the subject line
+    // The following regex pattern matches any text between "TFG" and "Video Byte" in the subject line
+    string subjectPattern = @"Subject:.*TFG(.*?)Video Byte";
+
+    Match subjectMatch = Regex.Match(emailContent, subjectPattern, RegexOptions.Singleline);
+
+    // Read the content of the file
+    string emailContent = File.ReadAllText(file);
+
+    // Use regex to extract the video ID from the link
+    // The following regex pattern matches links that start with "snapshots.***.com" and ends with the video ID
+    string videoIdPattern = @"snapshots\.\*\*\*\.com\/.*?\/(video_id)";
+
+    Match videoIdMatch = Regex.Match(emailContent, videoIdPattern);
+    
+    if (subjectMatch.Success)
+    {
+        string topicCategory = subjectMatch.Groups[1].Value.Trim();
+
+        // Output the extracted topic category or process it as needed
+        Console.WriteLine($"Topic Category: {topicCategory}");
+        // Extract and output other information like topic name and topic video ID
+        // ...
+    }
+}
