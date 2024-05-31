@@ -82,6 +82,7 @@ const ManagerNote: React.FC<ManagerNoteProps> = ({ mode, initialData }) => {
           borderRadius: 1,
           boxShadow: 3,
           backgroundColor: 'white',
+          marginTop: 4,
         }}
       >
         <Typography variant="h5" component="h1" gutterBottom>
@@ -94,10 +95,11 @@ const ManagerNote: React.FC<ManagerNoteProps> = ({ mode, initialData }) => {
               fullWidth
               value={accountNumber}
               onChange={(e) => setAccountNumber(e.target.value)}
+              sx={{ mb: 2 }}
             />
           </Grid>
           <Grid item xs={12}>
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel>Reason for Request</InputLabel>
               <Select
                 value={reason}
@@ -110,7 +112,7 @@ const ManagerNote: React.FC<ManagerNoteProps> = ({ mode, initialData }) => {
             </FormControl>
           </Grid>
           <Grid item xs={6}>
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel>Repeats</InputLabel>
               <Select
                 value={repeats}
@@ -131,6 +133,7 @@ const ManagerNote: React.FC<ManagerNoteProps> = ({ mode, initialData }) => {
               InputLabelProps={{ shrink: true }}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
+              sx={{ mb: 2 }}
             />
           </Grid>
           <Grid item xs={6}>
@@ -141,6 +144,7 @@ const ManagerNote: React.FC<ManagerNoteProps> = ({ mode, initialData }) => {
               InputLabelProps={{ shrink: true }}
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
+              sx={{ mb: 2 }}
             />
           </Grid>
           <Grid item xs={6}>
@@ -150,10 +154,11 @@ const ManagerNote: React.FC<ManagerNoteProps> = ({ mode, initialData }) => {
               type="number"
               value={occurrences}
               onChange={(e) => setOccurrences(e.target.value)}
+              sx={{ mb: 2 }}
             />
           </Grid>
           <Grid item xs={12}>
-            <FormControl component="fieldset">
+            <FormControl component="fieldset" sx={{ mb: 2 }}>
               <RadioGroup
                 row
                 value={recurring ? 'recurring' : 'immediate'}
@@ -190,6 +195,7 @@ const ManagerNote: React.FC<ManagerNoteProps> = ({ mode, initialData }) => {
                 fullWidth
                 type="date"
                 InputLabelProps={{ shrink: true }}
+                sx={{ mb: 2 }}
               />
             )}
           </Grid>
@@ -201,13 +207,14 @@ const ManagerNote: React.FC<ManagerNoteProps> = ({ mode, initialData }) => {
               rows={4}
               value={comments}
               onChange={(e) => setComments(e.target.value)}
+              sx={{ mb: 2 }}
             />
           </Grid>
           <Grid item xs={12} container justifyContent="flex-end">
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
+            <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ ml: 1 }}>
               {mode === 'create' ? 'Create' : 'Save'}
             </Button>
-            <Button variant="outlined" onClick={handleReset} style={{ marginLeft: 8 }}>
+            <Button variant="outlined" onClick={handleReset} sx={{ ml: 1 }}>
               Reset
             </Button>
           </Grid>
