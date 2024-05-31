@@ -1,4 +1,82 @@
-// src/App.tsx
+.container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+}
+
+.radio {
+  margin-right: 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button.create {
+  background-color: #007bff;
+  color: white;
+}
+
+button.reset {
+  background-color: #f8f9fa;
+  color: black;
+  margin-right: 10px;
+}
+
+button.cancel {
+  background-color: transparent;
+  color: #007bff;
+  text-decoration: underline;
+  margin-right: auto;
+}
+
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -8,7 +86,197 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  FormControl,
+  FormControl,// src/ManagerNote.tsx
+
+import React, { useState, useEffect } from 'react';
+import './ManagerNote.css';
+
+interface ManagerNoteProps {
+  mode: 'create' | 'edit';
+  initialData?: {
+    accountNumber: string;
+    reason: string;
+    repeats: string;
+    startDate: string;
+    endDate: string;
+    occurrences: string;
+    recurring: boolean;
+    addDueDate: boolean;
+    comments: string;
+  };
+}
+
+const ManagerNote: React.FC<ManagerNoteProps> = ({ mode, initialData }) => {
+  const [accountNumber, setAccountNumber] = useState('');
+  const [reason, setReason] = useState('Market Notes');
+  const [repeats, setRepeats] = useState('Yearly');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [occurrences, setOccurrences] = useState('');
+  const [recurring, setRecurring] = useState(true);
+  const [addDueDate, setAddDueDate] = useState(false);
+  const [comments, setComments] = useState('');
+
+  useEffect(() => {
+    if (mode === 'edit' && initialData) {
+      setAccountNumber(initialData.accountNumber);
+      setReason(initialData.reason);
+      setRepeats(initialData.repeats);
+      setStartDate(initialData.startDate);
+      setEndDate(initialData.endDate);
+      setOccurrences(initialData.occurrences);
+      setRecurring(initialData.recurring);
+      setAddDueDate(initialData.addDueDate);
+      setComments(initialData.comments);
+    }
+  }, [mode, initialData]);
+
+  const handleSubmit = () => {
+    // Handle form submission
+  };
+
+  const handleReset = () => {
+    setAccountNumber('');
+    setReason('Market Notes');
+    setRepeats('Yearly');
+    setStartDate('');
+    setEndDate('');
+    setOccurrences('');
+    setRecurring(true);
+    setAddDueDate(false);
+    setComments('');
+  };
+
+  return (
+    <div className="container">
+      <div className="title">
+        {mode === 'create' ? "Create New Manager's Note" : "Edit Manager's Note"}
+      </div>
+      <div className="form-group">
+        <label className="label">Account Number</label>
+        <input
+          className="input"
+          type="text"
+          value={accountNumber}
+          onChange={(e) => setAccountNumber(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label className="label">Reason for Request</label>
+        <select
+          className="input"
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+        >
+          <option value="Market Notes">Market Notes</option>
+          <option value="Client Request">Client Request</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <label className="label">Repeats</label>
+        <select
+          className="input"
+          value={repeats}
+          onChange={(e) => setRepeats(e.target.value)}
+        >
+          <option value="Yearly">Yearly</option>
+          <option value="Monthly">Monthly</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Daily">Daily</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <label className="label">Start Date</label>
+        <input
+          className="input"
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label className="label">End Date</label>
+        <input
+          className="input"
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label className="label">Occurrences</label>
+        <input
+          className="input"
+          type="number"
+          value={occurrences}
+          onChange={(e) => setOccurrences(e.target.value)}
+        />
+      </div>
+      <div className="form-group radio-group">
+        <label className="label">Appearance</label>
+        <div className="radio">
+          <input
+            type="radio"
+            id="recurring"
+            name="appearance"
+            checked={recurring}
+            onChange={() => setRecurring(true)}
+          />
+          <label htmlFor="recurring">Recurring</label>
+        </div>
+        <div className="radio">
+          <input
+            type="radio"
+            id="immediate"
+            name="appearance"
+            checked={!recurring}
+            onChange={() => setRecurring(false)}
+          />
+          <label htmlFor="immediate">Immediate</label>
+        </div>
+      </div>
+      <div className="form-group switch">
+        <label className="label">Add Due Date</label>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={addDueDate}
+            onChange={() => setAddDueDate(!addDueDate)}
+          />
+          <span className="slider round"></span>
+        </label>
+      </div>
+      {addDueDate && (
+        <div className="form-group">
+          <label className="label">Due Date</label>
+          <input
+            className="input"
+            type="date"
+          />
+        </div>
+      )}
+      <div className="form-group">
+        <label className="label">Comments</label>
+        <textarea
+          className="input"
+          value={comments}
+          onChange={(e) => setComments(e.target.value)}
+        />
+      </div>
+      <div className="buttons">
+        <button className="cancel">Cancel</button>
+        <button className="reset" onClick={handleReset}>Reset</button>
+        <button className="create" onClick={handleSubmit}>
+          {mode === 'create' ? 'Create' : 'Save'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ManagerNote;
+
   RadioGroup,
   FormControlLabel,
   Radio,
