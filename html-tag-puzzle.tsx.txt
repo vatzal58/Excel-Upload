@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import { DndContext, closestCenter } from '@dnd-kit/core';
+import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+const TagOption = ({ id }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+  
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    padding: '5px',
+    margin: '5px',
+    backgroundColor: 'lightblue',
+    cursor: 'grab',
+  };
+  
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {id}
+    </div>
+  );
+};
+
+const HTMLPuzzle = () => {
+  const [tags, setTags] = useState(['</p>', '</div>', '</h1>', '</a>', '</span>']);
+  const [htmlSnippet, setHtmlSnippet] = useState(`
+    <div>
+      <h1>Welcome to HTML Puzzle</h1>
+      <p>Drag and drop the correct ending tags<
+      <a href="#">Click here<
+      <span>This is inline<
+    <
+  `);
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      setTags((items) => {
+        const oldIndex = items.indexOf(active.id);
+        const newIndex = items.indexOf(over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
+  const checkAnswer = () => {
+    const correctOrder = ['</div>', '</h1>', '</p>', '</a>', '</span>'];
+    return JSON.stringify(tags) === JSON.stringify(correctOrder);
+  };
+
+  return (
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">HTML Tag Puzzle</h2>
+      <div className="bg-gray-100 p-4 rounded mb-4">
+        <pre>{htmlSnippet}</pre>
+      </div>
+      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={tags}>
+          <div className="flex flex-wrap">
+            {tags.map((tag) => (
+              <TagOption key={tag} id={tag} />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+      <button 
+        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={() => alert(checkAnswer() ? 'Correct!' : 'Try again!')}
+      >
+        Check Answer
+      </button>
+    </div>
+  );
+};
+
+export default HTMLPuzzle;
