@@ -1,0 +1,124 @@
+import React, { useState } from 'react';
+import { DndContext, closestCenter } from '@dnd-kit/core';
+import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+// This would typically be in a separate file, imported as 'snippetData'
+const snippetData = [
+  {
+    id: 'basic',
+    name: 'Basic Structure',
+    snippet: `
+<div>
+  <h1>Welcome to HTML Puzzle</h1>
+  <p>Drag and drop the correct ending tags<
+  <a href="#">Click here<
+  <span>This is inline<
+<
+    `,
+    initialOrder: ['</p>', '</div>', '</h1>', '</a>', '</span>'],
+    correctOrder: ['</div>', '</h1>', '</p>', '</a>', '</span>']
+  },
+  {
+    id: 'nested',
+    name: 'Nested Elements',
+    snippet: `
+<article>
+  <header>
+    <h2>Article Title<
+  <
+  <section>
+    <p>First paragraph<
+    <ul>
+      <li>List item 1<
+      <li>List item 2<
+    <
+  <
+<
+    `,
+    initialOrder: ['</article>', '</header>', '</h2>', '</section>', '</p>', '</ul>', '</li>', '</li>'],
+    correctOrder: ['</article>', '</header>', '</h2>', '</section>', '</p>', '</ul>', '</li>', '</li>']
+  }
+];
+
+const TagOption = ({ id }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+  
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    padding: '5px',
+    margin: '5px',
+    backgroundColor: 'lightblue',
+    cursor: 'grab',
+  };
+  
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {id}
+    </div>
+  );
+};
+
+const HTMLPuzzle = () => {
+  const [selectedSnippet, setSelectedSnippet] = useState(snippetData[0]);
+  const [tags, setTags] = useState(selectedSnippet.initialOrder);
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      setTags((items) => {
+        const oldIndex = items.indexOf(active.id);
+        const newIndex = items.indexOf(over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
+  const checkAnswer = () => {
+    return JSON.stringify(tags) === JSON.stringify(selectedSnippet.correctOrder);
+  };
+
+  const handleSnippetChange = (value) => {
+    const newSnippet = snippetData.find(s => s.id === value);
+    setSelectedSnippet(newSnippet);
+    setTags(newSnippet.initialOrder);
+  };
+
+  return (
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">HTML Tag Puzzle</h2>
+      <Select onValueChange={handleSnippetChange} defaultValue={selectedSnippet.id}>
+        <SelectTrigger className="w-[180px] mb-4">
+          <SelectValue placeholder="Select a snippet" />
+        </SelectTrigger>
+        <SelectContent>
+          {snippetData.map((snippet) => (
+            <SelectItem key={snippet.id} value={snippet.id}>{snippet.name}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <div className="bg-gray-100 p-4 rounded mb-4">
+        <pre>{selectedSnippet.snippet}</pre>
+      </div>
+      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={tags}>
+          <div className="flex flex-wrap">
+            {tags.map((tag) => (
+              <TagOption key={tag} id={tag} />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+      <button 
+        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={() => alert(checkAnswer() ? 'Correct!' : 'Try again!')}
+      >
+        Check Answer
+      </button>
+    </div>
+  );
+};
+
+export default HTMLPuzzle;
