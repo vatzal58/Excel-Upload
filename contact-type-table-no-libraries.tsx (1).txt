@@ -1,0 +1,43 @@
+import React from 'react';
+
+interface ContactType {
+  type: string;
+  volume: number;
+}
+
+const data: ContactType[] = [
+  { type: "Policy CC", volume: 14 },
+  { type: "Principal CC", volume: 7 },
+  { type: "Phone", volume: 25 },
+  { type: "Letter", volume: 30 },
+  { type: "Secure Email", volume: 2 },
+  { type: "In Person", volume: 42 },
+  { type: "No Contact Made", volume: 14 },
+];
+
+const ContactTypeTable: React.FC = () => {
+  return (
+    <div className="contact-type-table">
+      <table>
+        <thead>
+          <tr>
+            <th className="type-header">Type</th>
+            <th className="volume-header">Volume</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => (
+            <tr key={item.type} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+              <td className="type-cell">{item.type}</td>
+              <td className="volume-cell">
+                <a href="#" className="volume-link">{item.volume}</a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default ContactTypeTable;
