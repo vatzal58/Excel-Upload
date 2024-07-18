@@ -1,0 +1,55 @@
+import React, { useState } from 'react';
+import './ToggleButton.css';  // Make sure to import the CSS file
+
+type TogglePosition = 'left' | 'center' | 'right';
+
+interface ToggleButtonProps {
+  leftLabel?: string;
+  centerLabel?: string;
+  rightLabel?: string;
+  defaultPosition?: TogglePosition;
+  onChange?: (position: TogglePosition) => void;
+}
+
+const ToggleButton: React.FC<ToggleButtonProps> = ({
+  leftLabel = 'Left',
+  centerLabel = 'Center',
+  rightLabel = 'Right',
+  defaultPosition = 'left',
+  onChange
+}) => {
+  const [position, setPosition] = useState<TogglePosition>(defaultPosition);
+
+  const handleToggle = () => {
+    const positions: TogglePosition[] = ['left', 'center', 'right'];
+    const currentIndex = positions.indexOf(position);
+    const newPosition = positions[(currentIndex + 1) % positions.length];
+    setPosition(newPosition);
+    if (onChange) {
+      onChange(newPosition);
+    }
+  };
+
+  return (
+    <div className="toggle-wrapper">
+      <div className="toggle-container">
+        <div className="toggle-button-container">
+          <span className={`toggle-label ${position === 'left' ? 'active' : 'inactive'}`}>
+            {leftLabel}
+          </span>
+          <button className="toggle-button" onClick={handleToggle}>
+            <span className={`toggle-indicator ${position}`} />
+            <span className={`center-label toggle-label ${position === 'center' ? 'active' : 'inactive'}`}>
+              {centerLabel}
+            </span>
+          </button>
+          <span className={`toggle-label ${position === 'right' ? 'active' : 'inactive'}`}>
+            {rightLabel}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ToggleButton;
