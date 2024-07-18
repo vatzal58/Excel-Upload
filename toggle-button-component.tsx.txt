@@ -1,0 +1,68 @@
+import React, { useState } from 'react';
+
+type TogglePosition = 'left' | 'center' | 'right';
+
+interface ToggleButtonProps {
+  leftLabel?: string;
+  centerLabel?: string;
+  rightLabel?: string;
+  defaultPosition?: TogglePosition;
+  onChange?: (position: TogglePosition) => void;
+}
+
+const ToggleButton: React.FC<ToggleButtonProps> = ({
+  leftLabel = 'Left',
+  centerLabel = 'Center',
+  rightLabel = 'Right',
+  defaultPosition = 'left',
+  onChange
+}) => {
+  const [position, setPosition] = useState<TogglePosition>(defaultPosition);
+
+  const handleToggle = () => {
+    const positions: TogglePosition[] = ['left', 'center', 'right'];
+    const currentIndex = positions.indexOf(position);
+    const newPosition = positions[(currentIndex + 1) % positions.length];
+    setPosition(newPosition);
+    if (onChange) {
+      onChange(newPosition);
+    }
+  };
+
+  const getToggleClasses = () => {
+    switch (position) {
+      case 'left':
+        return 'translate-x-0';
+      case 'center':
+        return 'translate-x-5';
+      case 'right':
+        return 'translate-x-10';
+    }
+  };
+
+  return (
+    <div className="inline-flex flex-col items-center">
+      <span className={`text-sm mb-1 ${position === 'center' ? 'font-medium' : 'text-gray-500'}`}>
+        {centerLabel}
+      </span>
+      <div className="flex items-center space-x-2">
+        <span className={`text-sm ${position === 'left' ? 'font-medium' : 'text-gray-500'}`}>
+          {leftLabel}
+        </span>
+        <button
+          className="relative inline-flex h-6 w-16 items-center rounded-full bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          onClick={handleToggle}
+        >
+          <span
+            className={`inline-block h-4 w-4 transform rounded-full bg-indigo-600 transition-transform ${getToggleClasses()}`}
+          />
+        </button>
+        <span className={`text-sm ${position === 'right' ? 'font-medium' : 'text-gray-500'}`}>
+          {rightLabel}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export default ToggleButton;
